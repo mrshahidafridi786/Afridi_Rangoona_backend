@@ -1,0 +1,14 @@
+# Node Dependencies
+node_modules/
+.vercel
+
+# Logs & Test Output
+coverage/
+.nyc_output/
+logs/
+*.log
+npm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db

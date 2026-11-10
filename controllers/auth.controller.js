@@ -4,11 +4,11 @@ import { generateToken, sanitizeUser } from '../services/auth.service.js';
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
 
 const setAuthCookie = (res, token) => {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
   res.cookie('jwt', token, {
     httpOnly: true,
     secure: isProd,
-    sameSite: isProd ? 'strict' : 'lax',
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 };
@@ -93,7 +93,12 @@ export const login = async (req, res, next) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie('jwt');
+  const isProd = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax'
+  });
   return successResponse(res, 'Logged out successfully.');
 };
 

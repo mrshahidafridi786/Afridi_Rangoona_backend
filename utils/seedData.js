@@ -9,6 +9,12 @@ import { ORDER_STATUS, PAYMENT_STATUS, USER_ROLES } from '../config/constants.js
 
 export const seedDatabaseIfEmpty = async () => {
   try {
+    const existingProducts = await Product.estimatedDocumentCount();
+    const existingCategories = await Category.estimatedDocumentCount();
+    if (existingProducts > 0 && existingCategories > 0 && process.env.FORCE_SEED !== 'true') {
+      return;
+    }
+
     // 1. Seed or find Categories
     const categoriesData = [
       {
